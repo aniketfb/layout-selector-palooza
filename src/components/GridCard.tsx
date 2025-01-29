@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
-import AgoraRTC, { IAgoraRTCRemoteUser, ILocalVideoTrack, IRemoteVideoTrack } from "agora-rtc-sdk-ng";
+import AgoraRTC, { IAgoraRTCRemoteUser, ILocalVideoTrack } from "agora-rtc-sdk-ng";
 import { useToast } from "@/components/ui/use-toast";
 
 interface GridCardProps {
@@ -62,16 +62,11 @@ const GridCard = ({ id, content }: GridCardProps) => {
 
     try {
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-      
-      // Join the channel
       await agoraEngine.join(appId, channelName, token, null);
-      
-      // Create and publish local video track
       const videoTrack = await AgoraRTC.createCameraVideoTrack();
       await agoraEngine.publish(videoTrack);
       setLocalVideoTrack(videoTrack);
       
-      // Listen for remote users
       agoraEngine.on("user-published", async (user, mediaType) => {
         await agoraEngine.subscribe(user, mediaType);
         if (mediaType === "video") {
@@ -147,8 +142,6 @@ const GridCard = ({ id, content }: GridCardProps) => {
           className="p-2 cursor-pointer"
           onClick={handleFullscreenClick}
           onMouseDown={(e) => e.stopPropagation()}
-          onPointerDown={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
         >
           <Button 
             variant="ghost" 
@@ -160,14 +153,12 @@ const GridCard = ({ id, content }: GridCardProps) => {
         </div>
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <div 
-            className="p-2 cursor-pointer"
-            onClick={handleSettingsClick}
-            onMouseDown={(e) => e.stopPropagation()}
-            onPointerDown={(e) => e.stopPropagation()}
-            onTouchStart={(e) => e.stopPropagation()}
-          >
-            <DialogTrigger asChild>
+          <DialogTrigger asChild>
+            <div 
+              className="p-2 cursor-pointer"
+              onClick={handleSettingsClick}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               <Button 
                 variant="ghost" 
                 size="icon"
@@ -175,21 +166,23 @@ const GridCard = ({ id, content }: GridCardProps) => {
               >
                 <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 transition-colors" />
               </Button>
-            </DialogTrigger>
-          </div>
+            </div>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Video Feed Settings</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4 py-4">
+            <form onSubmit={handleSubmit} className="space-y-4 py-4" onClick={(e) => e.stopPropagation()}>
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="channelName">Channel Name</Label>
                   <Input
                     id="channelName"
+                    type="text"
                     value={channelName}
                     onChange={(e) => setChannelName(e.target.value)}
                     placeholder="Enter channel name"
+                    onClick={(e) => e.stopPropagation()}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -200,6 +193,7 @@ const GridCard = ({ id, content }: GridCardProps) => {
                     value={token}
                     onChange={(e) => setToken(e.target.value)}
                     placeholder="Enter token"
+                    onClick={(e) => e.stopPropagation()}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -210,6 +204,7 @@ const GridCard = ({ id, content }: GridCardProps) => {
                     value={appId}
                     onChange={(e) => setAppId(e.target.value)}
                     placeholder="Enter App ID"
+                    onClick={(e) => e.stopPropagation()}
                   />
                 </div>
               </div>
