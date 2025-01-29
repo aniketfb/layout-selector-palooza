@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Video, Settings } from "lucide-react";
+import { Video, Settings, Maximize2 } from "lucide-react";
 
 interface GridCardProps {
   id: string;
@@ -35,7 +35,8 @@ const GridCard = ({ id, content }: GridCardProps) => {
       </div>
       
       <div className="absolute top-4 right-4 flex items-center gap-2">
-        <Settings className="w-5 h-5 text-foreground/50" />
+        <Maximize2 className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
+        <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
