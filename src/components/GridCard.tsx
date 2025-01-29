@@ -196,6 +196,7 @@ const GridCard = ({ id, content }: GridCardProps) => {
                   <Label htmlFor="token">Token</Label>
                   <Input
                     id="token"
+                    type="text"
                     value={token}
                     onChange={(e) => setToken(e.target.value)}
                     placeholder="Enter token"
@@ -205,6 +206,7 @@ const GridCard = ({ id, content }: GridCardProps) => {
                   <Label htmlFor="appId">App ID</Label>
                   <Input
                     id="appId"
+                    type="text"
                     value={appId}
                     onChange={(e) => setAppId(e.target.value)}
                     placeholder="Enter App ID"
