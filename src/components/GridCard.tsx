@@ -1,5 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Settings } from "lucide-react";
 
 interface GridCardProps {
   id: string;
@@ -26,10 +27,14 @@ const GridCard = ({ id, content }: GridCardProps) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-card rounded-lg border border-border p-4 h-full min-h-[200px] transition-all duration-500 ease-in-out hover:border-primary/50 flex items-center justify-center cursor-move"
+      className="bg-card rounded-lg border border-border p-4 h-full min-h-[200px] transition-all duration-500 ease-in-out hover:border-primary/50 flex flex-col items-center justify-center cursor-move relative"
     >
-      <div className="text-card-foreground/50">
+      <Settings className="text-card-foreground/50 mb-4 w-12 h-12" />
+      <div className="text-card-foreground/50 text-lg">
         {content}
+      </div>
+      <div className="text-card-foreground/30 text-sm mt-2">
+        Click settings to configure
       </div>
     </div>
   );
