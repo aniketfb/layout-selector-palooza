@@ -108,7 +108,7 @@ const GridLayout = () => {
     }
   };
 
-  const handleDeleteLayout = (e: React.MouseEvent, layoutName: string) => {
+  const handleDeleteLayout = (layoutName: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setSavedLayouts((prev) => prev.filter((layout) => layout.name !== layoutName));
@@ -151,17 +151,16 @@ const GridLayout = () => {
                       className="flex items-center justify-between group relative pr-8"
                     >
                       <span>{layout.name}</span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 absolute right-1 pointer-events-auto"
-                        onClick={(e) => handleDeleteLayout(e, layout.name)}
-                        onMouseDown={(e) => e.stopPropagation()}
-                        onPointerDown={(e) => e.stopPropagation()}
+                      <div
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDeleteLayout(layout.name, e);
+                        }}
+                        className="absolute right-1 cursor-pointer"
                       >
-                        <X className="h-4 w-4" />
-                      </Button>
+                        <X className="h-4 w-4 opacity-0 group-hover:opacity-100" />
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -169,6 +168,7 @@ const GridLayout = () => {
             </div>
           )}
         </div>
+        
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">
             Feeds {startItem} – {endItem} of {totalItems}
@@ -193,6 +193,7 @@ const GridLayout = () => {
           </Button>
         </div>
       </div>
+      
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <div className={`grid-layout layout-${currentLayout}`}>
           <SortableContext
