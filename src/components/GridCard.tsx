@@ -53,6 +53,15 @@ const GridCard = ({ id, content }: GridCardProps) => {
                 e.stopPropagation();
                 e.preventDefault();
               }}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+              }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+              }}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+              }}
             >
               <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 transition-colors" />
             </Button>
