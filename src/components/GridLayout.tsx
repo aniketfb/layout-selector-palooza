@@ -113,7 +113,7 @@ const GridLayout = () => {
   return (
     <div className="flex flex-col items-center min-h-screen py-8">
       <div className="w-full max-w-7xl mx-auto px-4 flex justify-between items-center mb-8">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center space-x-4 h-10">
           <LayoutSelector
             currentLayout={currentLayout}
             onLayoutChange={(layout) => {
