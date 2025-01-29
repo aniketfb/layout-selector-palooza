@@ -27,7 +27,7 @@ const GridCard = ({ id, content }: GridCardProps) => {
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(document.fullscreenElement === cardRef.current);
+      setIsFullscreen(Boolean(document.fullscreenElement));
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -39,12 +39,16 @@ const GridCard = ({ id, content }: GridCardProps) => {
   const toggleFullscreen = async () => {
     try {
       if (!isFullscreen) {
-        if (cardRef.current) {
+        if (cardRef.current && cardRef.current.requestFullscreen) {
           await cardRef.current.requestFullscreen();
+        } else if (cardRef.current && (cardRef.current as any).webkitRequestFullscreen) {
+          await (cardRef.current as any).webkitRequestFullscreen();
         }
       } else {
-        if (document.fullscreenElement) {
+        if (document.exitFullscreen) {
           await document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+          await (document as any).webkitExitFullscreen();
         }
       }
     } catch (err) {
@@ -58,14 +62,17 @@ const GridCard = ({ id, content }: GridCardProps) => {
         setNodeRef(node);
         if (cardRef) cardRef.current = node;
       }}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={`bg-card rounded-lg border border-border p-4 transition-all duration-500 ease-in-out hover:border-primary/50 cursor-move relative flex flex-col ${
-        isFullscreen 
-          ? 'fixed inset-0 z-50 w-screen h-screen m-0 rounded-none border-none' 
-          : 'h-full min-h-[200px]'
-      }`}
+      style={isFullscreen ? undefined : style}
+      {...(isFullscreen ? {} : { ...attributes, ...listeners })}
+      className={`
+        bg-card rounded-lg border border-border p-4 
+        transition-all duration-500 ease-in-out 
+        ${isFullscreen 
+          ? 'fixed inset-0 z-50 w-screen h-screen m-0 p-6 rounded-none border-none' 
+          : 'h-full min-h-[200px] hover:border-primary/50 cursor-move'
+        }
+        relative flex flex-col
+      `}
     >
       <div className="absolute top-4 left-4 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-green-500" />
