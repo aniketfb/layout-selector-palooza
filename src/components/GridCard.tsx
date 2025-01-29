@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface GridCardProps {
   id: string;
@@ -16,6 +17,8 @@ interface GridCardProps {
 }
 
 const GridCard = ({ id, content }: GridCardProps) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   const {
     attributes,
     listeners,
@@ -27,6 +30,12 @@ const GridCard = ({ id, content }: GridCardProps) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition: transition || 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  };
+
+  const handleSettingsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsDialogOpen(true);
   };
 
   return (
@@ -42,43 +51,29 @@ const GridCard = ({ id, content }: GridCardProps) => {
         <span className="text-sm text-foreground/80">Operational</span>
       </div>
       
-      <div className="absolute top-4 right-4 flex items-center gap-2">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className="h-auto w-auto p-0 hover:bg-transparent"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-              }}
-              onPointerDown={(e) => {
-                e.stopPropagation();
-              }}
-              onMouseDown={(e) => {
-                e.stopPropagation();
-              }}
-              onTouchStart={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 transition-colors" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Video Feed Settings</DialogTitle>
-            </DialogHeader>
-            <div className="py-4">
-              <p className="text-sm text-muted-foreground">
-                Configure your video feed settings here.
-              </p>
-              {/* Add your settings form or controls here */}
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="absolute top-4 right-4 h-auto w-auto p-0 hover:bg-transparent cursor-pointer"
+            onClick={handleSettingsClick}
+          >
+            <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 transition-colors" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Video Feed Settings</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground">
+              Configure your video feed settings here.
+            </p>
+            {/* Add your settings form or controls here */}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
         <Video className="w-12 h-12 text-foreground/30" />
