@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Maximize2, Minimize2, Settings } from 'lucide-react';
+import SettingsDialog from './SettingsDialog';
 
 interface FullscreenControlsProps {
   isFullscreen: boolean;
@@ -7,21 +8,32 @@ interface FullscreenControlsProps {
 }
 
 const FullscreenControls = ({ isFullscreen, onToggleFullscreen }: FullscreenControlsProps) => {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
   return (
-    <div className="absolute top-4 right-4 flex items-center gap-2">
-      {isFullscreen ? (
-        <Minimize2 
+    <>
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        {isFullscreen ? (
+          <Minimize2 
+            className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
+            onClick={onToggleFullscreen}
+          />
+        ) : (
+          <Maximize2 
+            className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
+            onClick={onToggleFullscreen}
+          />
+        )}
+        <Settings 
           className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
-          onClick={onToggleFullscreen}
+          onClick={() => setIsSettingsOpen(true)}
         />
-      ) : (
-        <Maximize2 
-          className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
-          onClick={onToggleFullscreen}
-        />
-      )}
-      <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
-    </div>
+      </div>
+      <SettingsDialog 
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
+    </>
   );
 };
 
