@@ -18,11 +18,12 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type LayoutOption = "1-2" | "2-2" | "3-4";
 
@@ -122,21 +123,18 @@ const GridLayout = () => {
           />
           <SaveLayoutDialog onSave={handleSaveLayout} />
           {savedLayouts.length > 0 && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">Load Layout</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
+            <Select onValueChange={handleLoadLayout}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Load Layout" />
+              </SelectTrigger>
+              <SelectContent>
                 {savedLayouts.map((layout) => (
-                  <DropdownMenuItem
-                    key={layout.name}
-                    onClick={() => handleLoadLayout(layout.name)}
-                  >
+                  <SelectItem key={layout.name} value={layout.name}>
                     {layout.name}
-                  </DropdownMenuItem>
+                  </SelectItem>
                 ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </SelectContent>
+            </Select>
           )}
         </div>
         <div className="flex items-center gap-2">
