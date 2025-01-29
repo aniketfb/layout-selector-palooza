@@ -34,7 +34,6 @@ const GridCard = ({ id, content }: GridCardProps) => {
 
   const handleSettingsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    e.preventDefault();
     setIsDialogOpen(true);
   };
 
@@ -52,16 +51,23 @@ const GridCard = ({ id, content }: GridCardProps) => {
       </div>
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className="absolute top-4 right-4 h-auto w-auto p-0 hover:bg-transparent cursor-pointer"
-            onClick={handleSettingsClick}
-          >
-            <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 transition-colors" />
-          </Button>
-        </DialogTrigger>
+        <div 
+          className="absolute top-2 right-2 p-2 cursor-pointer"
+          onClick={handleSettingsClick}
+          onMouseDown={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
+          <DialogTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="h-auto w-auto p-0 hover:bg-transparent"
+            >
+              <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 transition-colors" />
+            </Button>
+          </DialogTrigger>
+        </div>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Video Feed Settings</DialogTitle>
