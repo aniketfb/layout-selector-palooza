@@ -9,12 +9,32 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
 
 type LayoutOption = "1-2" | "2-2" | "3-4";
 
 const GridLayout = () => {
   const [currentLayout, setCurrentLayout] = useState<LayoutOption>("2-2");
   const [currentPage, setCurrentPage] = useState(1);
+  const [items, setItems] = useState(() => 
+    Array.from({ length: 19 }, (_, i) => ({ id: `${i + 1}`, content: `Item ${i + 1}` }))
+  );
+
+  const mouseSensor = useSensor(MouseSensor);
+  const touchSensor = useSensor(TouchSensor);
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   const itemsPerPage = {
     "1-2": 2,
@@ -28,15 +48,25 @@ const GridLayout = () => {
   const getGridItems = () => {
     const startIndex = (currentPage - 1) * itemsPerPage[currentLayout];
     const endIndex = Math.min(startIndex + itemsPerPage[currentLayout], totalItems);
+    const currentItems = items.slice(startIndex, endIndex);
     
-    return Array.from(
-      { length: itemsPerPage[currentLayout] },
-      (_, i) => <GridCard key={startIndex + i} />
-    );
+    return currentItems;
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setItems((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
   };
 
   const startItem = ((currentPage - 1) * itemsPerPage[currentLayout]) + 1;
@@ -66,7 +96,15 @@ const GridLayout = () => {
           />
         </div>
       </div>
-      <div className={`grid-layout layout-${currentLayout}`}>{getGridItems()}</div>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <div className={`grid-layout layout-${currentLayout}`}>
+          <SortableContext items={getGridItems().map(item => item.id)} strategy={rectSortingStrategy}>
+            {getGridItems().map((item) => (
+              <GridCard key={item.id} id={item.id} content={item.content} />
+            ))}
+          </SortableContext>
+        </div>
+      </DndContext>
     </div>
   );
 };
