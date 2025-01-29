@@ -17,6 +17,12 @@ import {
 } from "@dnd-kit/sortable";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type LayoutOption = "1-2" | "2-2" | "3-4";
 
@@ -115,6 +121,23 @@ const GridLayout = () => {
             }}
           />
           <SaveLayoutDialog onSave={handleSaveLayout} />
+          {savedLayouts.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Load Layout</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {savedLayouts.map((layout) => (
+                  <DropdownMenuItem
+                    key={layout.name}
+                    onClick={() => handleLoadLayout(layout.name)}
+                  >
+                    {layout.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">
@@ -138,20 +161,6 @@ const GridLayout = () => {
           </Button>
         </div>
       </div>
-      {savedLayouts.length > 0 && (
-        <div className="w-full max-w-7xl mx-auto px-4 mb-4 flex gap-2">
-          {savedLayouts.map((layout) => (
-            <Button
-              key={layout.name}
-              variant="outline"
-              size="sm"
-              onClick={() => handleLoadLayout(layout.name)}
-            >
-              {layout.name}
-            </Button>
-          ))}
-        </div>
-      )}
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <div className={`grid-layout layout-${currentLayout}`}>
           <SortableContext items={getGridItems().map(item => item.id)} strategy={rectSortingStrategy}>
