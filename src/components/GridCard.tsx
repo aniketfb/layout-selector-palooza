@@ -39,9 +39,13 @@ const GridCard = ({ id, content }: GridCardProps) => {
   const toggleFullscreen = async () => {
     try {
       if (!isFullscreen) {
-        await cardRef.current?.requestFullscreen();
+        if (cardRef.current) {
+          await cardRef.current.requestFullscreen();
+        }
       } else {
-        await document.exitFullscreen();
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        }
       }
     } catch (err) {
       console.error('Error toggling fullscreen:', err);
@@ -57,8 +61,10 @@ const GridCard = ({ id, content }: GridCardProps) => {
       style={style}
       {...attributes}
       {...listeners}
-      className={`bg-card rounded-lg border border-border p-4 h-full min-h-[200px] transition-all duration-500 ease-in-out hover:border-primary/50 cursor-move relative flex flex-col ${
-        isFullscreen ? 'fixed inset-0 z-50 w-screen h-screen' : ''
+      className={`bg-card rounded-lg border border-border p-4 transition-all duration-500 ease-in-out hover:border-primary/50 cursor-move relative flex flex-col ${
+        isFullscreen 
+          ? 'fixed inset-0 z-50 w-screen h-screen m-0 rounded-none border-none' 
+          : 'h-full min-h-[200px]'
       }`}
     >
       <div className="absolute top-4 left-4 flex items-center gap-2">
