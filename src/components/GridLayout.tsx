@@ -16,6 +16,7 @@ import {
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 type LayoutOption = "1-2" | "2-2" | "3-4";
 
@@ -119,18 +120,22 @@ const GridLayout = () => {
           <span className="text-sm text-muted-foreground">
             Feeds {startItem} – {endItem} of {totalItems}
           </span>
-          <button
+          <Button
             onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-            className={`px-2 py-1 ${currentPage <= 1 ? "pointer-events-none opacity-50" : ""}`}
+            variant="outline"
+            size="sm"
+            className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
           >
             Previous
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-            className={`px-2 py-1 ${currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}`}
+            variant="outline"
+            size="sm"
+            className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
           >
             Next
-          </button>
+          </Button>
         </div>
       </div>
       {savedLayouts.length > 0 && (
