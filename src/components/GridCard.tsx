@@ -27,21 +27,24 @@ const GridCard = ({ id, content }: GridCardProps) => {
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(Boolean(document.fullscreenElement));
+      setIsFullscreen(document.fullscreenElement === cardRef.current);
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
     };
   }, []);
 
   const toggleFullscreen = async () => {
     try {
-      if (!isFullscreen) {
-        if (cardRef.current && cardRef.current.requestFullscreen) {
+      if (!isFullscreen && cardRef.current) {
+        if (cardRef.current.requestFullscreen) {
           await cardRef.current.requestFullscreen();
-        } else if (cardRef.current && (cardRef.current as any).webkitRequestFullscreen) {
+        } else if ((cardRef.current as any).webkitRequestFullscreen) {
           await (cardRef.current as any).webkitRequestFullscreen();
         }
       } else {
@@ -65,13 +68,15 @@ const GridCard = ({ id, content }: GridCardProps) => {
       style={isFullscreen ? undefined : style}
       {...(isFullscreen ? {} : { ...attributes, ...listeners })}
       className={`
-        bg-card rounded-lg border border-border p-4 
-        transition-all duration-500 ease-in-out 
-        ${isFullscreen 
-          ? 'fixed inset-0 z-50 w-screen h-screen m-0 p-6 rounded-none border-none' 
-          : 'h-full min-h-[200px] hover:border-primary/50 cursor-move'
-        }
         relative flex flex-col
+        ${isFullscreen 
+          ? 'fixed inset-0 z-50 w-screen h-screen m-0 p-6 bg-background'
+          : `
+            bg-card rounded-lg border border-border p-4 
+            transition-all duration-500 ease-in-out
+            h-full min-h-[200px] hover:border-primary/50 cursor-move
+          `
+        }
       `}
     >
       <div className="absolute top-4 left-4 flex items-center gap-2">
