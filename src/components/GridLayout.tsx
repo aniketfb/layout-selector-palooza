@@ -8,6 +8,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis,
 } from "@/components/ui/pagination";
 
 type LayoutOption = "1-2" | "2-2" | "3-4";
@@ -22,7 +23,7 @@ const GridLayout = () => {
     "3-4": 12,
   };
 
-  const totalItems = 24; // Example total number of items
+  const totalItems = 24;
   const totalPages = Math.ceil(totalItems / itemsPerPage[currentLayout]);
 
   const getGridItems = () => {
@@ -39,6 +40,35 @@ const GridLayout = () => {
     setCurrentPage(page);
   };
 
+  const getVisiblePages = () => {
+    const pages = [];
+    
+    // Always show first page
+    pages.push(1);
+    
+    if (currentPage > 3) {
+      pages.push('ellipsis');
+    }
+    
+    // Show current page and adjacent pages
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      if (!pages.includes(i)) {
+        pages.push(i);
+      }
+    }
+    
+    if (currentPage < totalPages - 2) {
+      pages.push('ellipsis');
+    }
+    
+    // Always show last page
+    if (totalPages > 1) {
+      pages.push(totalPages);
+    }
+    
+    return pages;
+  };
+
   return (
     <div className="flex flex-col items-center min-h-screen py-8">
       <div className="w-full max-w-7xl mx-auto px-4 flex justify-between items-center mb-8">
@@ -46,7 +76,7 @@ const GridLayout = () => {
           currentLayout={currentLayout}
           onLayoutChange={(layout) => {
             setCurrentLayout(layout);
-            setCurrentPage(1); // Reset to first page when layout changes
+            setCurrentPage(1);
           }}
         />
         <Pagination>
@@ -57,14 +87,18 @@ const GridLayout = () => {
                 className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <PaginationItem key={i + 1}>
-                <PaginationLink
-                  onClick={() => handlePageChange(i + 1)}
-                  isActive={currentPage === i + 1}
-                >
-                  {i + 1}
-                </PaginationLink>
+            {getVisiblePages().map((page, index) => (
+              <PaginationItem key={index}>
+                {page === 'ellipsis' ? (
+                  <PaginationEllipsis />
+                ) : (
+                  <PaginationLink
+                    onClick={() => handlePageChange(page as number)}
+                    isActive={currentPage === page}
+                  >
+                    {page}
+                  </PaginationLink>
+                )}
               </PaginationItem>
             ))}
             <PaginationItem>
