@@ -7,8 +7,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 interface GridCardProps {
@@ -18,6 +21,9 @@ interface GridCardProps {
 
 const GridCard = ({ id, content }: GridCardProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [channelName, setChannelName] = useState("");
+  const [token, setToken] = useState("");
+  const [appId, setAppId] = useState("");
   
   const {
     attributes,
@@ -35,6 +41,12 @@ const GridCard = ({ id, content }: GridCardProps) => {
   const handleSettingsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsDialogOpen(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log({ channelName, token, appId });
+    setIsDialogOpen(false);
   };
 
   return (
@@ -72,12 +84,40 @@ const GridCard = ({ id, content }: GridCardProps) => {
           <DialogHeader>
             <DialogTitle>Video Feed Settings</DialogTitle>
           </DialogHeader>
-          <div className="py-4">
-            <p className="text-sm text-muted-foreground">
-              Configure your video feed settings here.
-            </p>
-            {/* Add your settings form or controls here */}
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4 py-4">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="channelName">Channel Name</Label>
+                <Input
+                  id="channelName"
+                  value={channelName}
+                  onChange={(e) => setChannelName(e.target.value)}
+                  placeholder="Enter channel name"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="token">Token</Label>
+                <Input
+                  id="token"
+                  value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                  placeholder="Enter token"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="appId">App ID</Label>
+                <Input
+                  id="appId"
+                  value={appId}
+                  onChange={(e) => setAppId(e.target.value)}
+                  placeholder="Enter App ID"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="submit">Save Changes</Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
 
