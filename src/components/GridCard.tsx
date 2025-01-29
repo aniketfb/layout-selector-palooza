@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Video, Settings, Maximize2, Minimize2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface GridCardProps {
   id: string;
@@ -10,6 +10,8 @@ interface GridCardProps {
 
 const GridCard = ({ id, content }: GridCardProps) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const elementRef = useRef<HTMLDivElement>(null);
+  
   const {
     attributes,
     listeners,
@@ -25,7 +27,7 @@ const GridCard = ({ id, content }: GridCardProps) => {
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      setNodeRef.current?.requestFullscreen().then(() => {
+      elementRef.current?.requestFullscreen().then(() => {
         setIsFullscreen(true);
       }).catch((err) => {
         console.log(`Error attempting to enable fullscreen: ${err.message}`);
@@ -41,7 +43,10 @@ const GridCard = ({ id, content }: GridCardProps) => {
 
   return (
     <div
-      ref={setNodeRef}
+      ref={(node) => {
+        setNodeRef(node);
+        if (elementRef) elementRef.current = node;
+      }}
       style={style}
       {...attributes}
       {...listeners}
