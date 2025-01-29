@@ -1,7 +1,3 @@
-import { useState, useEffect } from "react";
-import LayoutSelector from "./LayoutSelector";
-import GridCard from "./GridCard";
-import SaveLayoutDialog from "./SaveLayoutDialog";
 import {
   DndContext,
   DragEndEvent,
@@ -15,6 +11,10 @@ import {
   arrayMove,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useState, useEffect } from "react";
+import LayoutSelector from "./LayoutSelector";
+import GridCard from "./GridCard";
+import SaveLayoutDialog from "./SaveLayoutDialog";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -113,28 +113,34 @@ const GridLayout = () => {
   return (
     <div className="flex flex-col items-center min-h-screen py-8">
       <div className="w-full max-w-7xl mx-auto px-4 flex justify-between items-center mb-8">
-        <div className="flex items-center space-x-4 h-10">
-          <LayoutSelector
-            currentLayout={currentLayout}
-            onLayoutChange={(layout) => {
-              setCurrentLayout(layout);
-              setCurrentPage(1);
-            }}
-          />
-          <SaveLayoutDialog onSave={handleSaveLayout} />
+        <div className="flex items-center gap-4">
+          <div className="h-10 flex items-center">
+            <LayoutSelector
+              currentLayout={currentLayout}
+              onLayoutChange={(layout) => {
+                setCurrentLayout(layout);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
+          <div className="h-10 flex items-center">
+            <SaveLayoutDialog onSave={handleSaveLayout} />
+          </div>
           {savedLayouts.length > 0 && (
-            <Select onValueChange={handleLoadLayout}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Load Layout" />
-              </SelectTrigger>
-              <SelectContent>
-                {savedLayouts.map((layout) => (
-                  <SelectItem key={layout.name} value={layout.name}>
-                    {layout.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="h-10 flex items-center">
+              <Select onValueChange={handleLoadLayout}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Load Layout" />
+                </SelectTrigger>
+                <SelectContent>
+                  {savedLayouts.map((layout) => (
+                    <SelectItem key={layout.name} value={layout.name}>
+                      {layout.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -150,7 +156,9 @@ const GridLayout = () => {
             Previous
           </Button>
           <Button
-            onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+            onClick={() =>
+              currentPage < totalPages && handlePageChange(currentPage + 1)
+            }
             variant="outline"
             size="sm"
             className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
@@ -161,7 +169,10 @@ const GridLayout = () => {
       </div>
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <div className={`grid-layout layout-${currentLayout}`}>
-          <SortableContext items={getGridItems().map(item => item.id)} strategy={rectSortingStrategy}>
+          <SortableContext
+            items={getGridItems().map((item) => item.id)}
+            strategy={rectSortingStrategy}
+          >
             {getGridItems().map((item) => (
               <GridCard key={item.id} id={item.id} content={item.content} />
             ))}
