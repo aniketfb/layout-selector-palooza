@@ -51,6 +51,8 @@ const GridCard = ({ id, content }: GridCardProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     if (!appId || !channelName || !token) {
       toast({
         title: "Error",
@@ -168,7 +170,7 @@ const GridCard = ({ id, content }: GridCardProps) => {
               </Button>
             </div>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent onClick={(e) => e.stopPropagation()}>
             <DialogHeader>
               <DialogTitle>Video Feed Settings</DialogTitle>
             </DialogHeader>
@@ -180,9 +182,13 @@ const GridCard = ({ id, content }: GridCardProps) => {
                     id="channelName"
                     type="text"
                     value={channelName}
-                    onChange={(e) => setChannelName(e.target.value)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      setChannelName(e.target.value);
+                    }}
                     placeholder="Enter channel name"
                     onClick={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -191,9 +197,13 @@ const GridCard = ({ id, content }: GridCardProps) => {
                     id="token"
                     type="text"
                     value={token}
-                    onChange={(e) => setToken(e.target.value)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      setToken(e.target.value);
+                    }}
                     placeholder="Enter token"
                     onClick={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -202,9 +212,13 @@ const GridCard = ({ id, content }: GridCardProps) => {
                     id="appId"
                     type="text"
                     value={appId}
-                    onChange={(e) => setAppId(e.target.value)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      setAppId(e.target.value);
+                    }}
                     placeholder="Enter App ID"
                     onClick={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
                   />
                 </div>
               </div>
