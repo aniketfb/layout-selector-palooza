@@ -26,8 +26,15 @@ const GridCard = ({ id, content }: GridCardProps) => {
   };
 
   useEffect(() => {
+    const element = cardRef.current;
+    
     const handleFullscreenChange = () => {
-      setIsFullscreen(document.fullscreenElement === cardRef.current);
+      const isDocumentFullscreen = document.fullscreenElement !== null || 
+        (document as any).webkitFullscreenElement !== null;
+      const isCardFullscreen = document.fullscreenElement === element || 
+        (document as any).webkitFullscreenElement === element;
+      
+      setIsFullscreen(isDocumentFullscreen && isCardFullscreen);
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -40,8 +47,10 @@ const GridCard = ({ id, content }: GridCardProps) => {
   }, []);
 
   const toggleFullscreen = async () => {
+    if (!cardRef.current) return;
+
     try {
-      if (!isFullscreen && cardRef.current) {
+      if (!isFullscreen) {
         if (cardRef.current.requestFullscreen) {
           await cardRef.current.requestFullscreen();
         } else if ((cardRef.current as any).webkitRequestFullscreen) {
@@ -61,12 +70,10 @@ const GridCard = ({ id, content }: GridCardProps) => {
 
   return (
     <div
-      ref={(node) => {
-        setNodeRef(node);
-        if (cardRef) cardRef.current = node;
-      }}
+      ref={setNodeRef}
       style={isFullscreen ? undefined : style}
-      {...(isFullscreen ? {} : { ...attributes, ...listeners })}
+      {...attributes}
+      {...(isFullscreen ? {} : listeners)}
       className={`
         relative flex flex-col
         ${isFullscreen 
@@ -79,36 +86,41 @@ const GridCard = ({ id, content }: GridCardProps) => {
         }
       `}
     >
-      <div className="absolute top-4 left-4 flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-green-500" />
-        <span className="text-sm text-foreground/80">Operational</span>
-      </div>
-      
-      <div className="absolute top-4 right-4 flex items-center gap-2">
-        {isFullscreen ? (
-          <Minimize2 
-            className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
-            onClick={toggleFullscreen}
-          />
-        ) : (
-          <Maximize2 
-            className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
-            onClick={toggleFullscreen}
-          />
-        )}
-        <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
-      </div>
-
-      <div className="flex-1 flex flex-col items-center justify-center gap-4">
-        <Video className="w-12 h-12 text-foreground/30" />
-        <div className="text-center">
-          <h3 className="text-lg font-medium text-foreground mb-2">No video feed available</h3>
-          <p className="text-sm text-foreground/50">Click settings to configure video feed</p>
+      <div 
+        ref={cardRef}
+        className="w-full h-full relative"
+      >
+        <div className="absolute top-4 left-4 flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-green-500" />
+          <span className="text-sm text-foreground/80">Operational</span>
         </div>
-      </div>
+        
+        <div className="absolute top-4 right-4 flex items-center gap-2">
+          {isFullscreen ? (
+            <Minimize2 
+              className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
+              onClick={toggleFullscreen}
+            />
+          ) : (
+            <Maximize2 
+              className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
+              onClick={toggleFullscreen}
+            />
+          )}
+          <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
+        </div>
 
-      <div className="absolute bottom-4 right-4">
-        <span className="text-sm text-foreground/50">0 ft (RLT)</span>
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 h-full">
+          <Video className="w-12 h-12 text-foreground/30" />
+          <div className="text-center">
+            <h3 className="text-lg font-medium text-foreground mb-2">No video feed available</h3>
+            <p className="text-sm text-foreground/50">Click settings to configure video feed</p>
+          </div>
+        </div>
+
+        <div className="absolute bottom-4 right-4">
+          <span className="text-sm text-foreground/50">0 ft (RLT)</span>
+        </div>
       </div>
     </div>
   );
