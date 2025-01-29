@@ -108,7 +108,9 @@ const GridLayout = () => {
     }
   };
 
-  const handleDeleteLayout = (layoutName: string) => {
+  const handleDeleteLayout = (e: React.MouseEvent, layoutName: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     setSavedLayouts((prev) => prev.filter((layout) => layout.name !== layoutName));
     toast({
       title: "Layout Deleted",
@@ -146,17 +148,15 @@ const GridLayout = () => {
                     <SelectItem 
                       key={layout.name} 
                       value={layout.name}
-                      className="flex items-center justify-between group"
+                      className="flex items-center justify-between group relative pr-8"
                     >
                       <span>{layout.name}</span>
                       <Button
+                        type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 -mr-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteLayout(layout.name);
-                        }}
+                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 absolute right-1"
+                        onClick={(e) => handleDeleteLayout(e, layout.name)}
                       >
                         <X className="h-4 w-4" />
                       </Button>
