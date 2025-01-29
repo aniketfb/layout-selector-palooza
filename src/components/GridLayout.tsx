@@ -17,6 +17,7 @@ import GridCard from "./GridCard";
 import SaveLayoutDialog from "./SaveLayoutDialog";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -107,6 +108,14 @@ const GridLayout = () => {
     }
   };
 
+  const handleDeleteLayout = (layoutName: string) => {
+    setSavedLayouts((prev) => prev.filter((layout) => layout.name !== layoutName));
+    toast({
+      title: "Layout Deleted",
+      description: `Layout "${layoutName}" has been deleted.`,
+    });
+  };
+
   const startItem = ((currentPage - 1) * itemsPerPage[currentLayout]) + 1;
   const endItem = Math.min(currentPage * itemsPerPage[currentLayout], totalItems);
 
@@ -134,8 +143,23 @@ const GridLayout = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {savedLayouts.map((layout) => (
-                    <SelectItem key={layout.name} value={layout.name}>
-                      {layout.name}
+                    <SelectItem 
+                      key={layout.name} 
+                      value={layout.name}
+                      className="flex items-center justify-between group"
+                    >
+                      <span>{layout.name}</span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 -mr-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteLayout(layout.name);
+                        }}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -173,8 +197,8 @@ const GridLayout = () => {
             items={getGridItems().map((item) => item.id)}
             strategy={rectSortingStrategy}
           >
-            {getGridItems().map((item) => (
-              <GridCard key={item.id} id={item.id} content={item.content} />
+            {getGridItems().map((item, index) => (
+              <GridCard key={item.id} id={item.id} content={item.content} index={index} />
             ))}
           </SortableContext>
         </div>
