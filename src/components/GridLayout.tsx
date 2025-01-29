@@ -108,12 +108,25 @@ const GridLayout = () => {
     }
   };
 
-  const handleDeleteLayout = (layoutName: string) => {
+  const handleDeleteLayout = (layoutName: string, event: React.MouseEvent) => {
+    event.preventDefault(); // Prevent the select from opening
+    event.stopPropagation(); // Stop the event from bubbling up
     setSavedLayouts((prev) => prev.filter((layout) => layout.name !== layoutName));
     toast({
       title: "Layout Deleted",
       description: `Layout "${layoutName}" has been deleted.`,
     });
+  };
+
+  const handleLayoutSelect = (layoutName: string) => {
+    const layout = savedLayouts.find((l) => l.name === layoutName);
+    if (layout) {
+      setItems(layout.items);
+      toast({
+        title: "Layout Loaded",
+        description: `Layout "${layoutName}" has been loaded successfully.`,
+      });
+    }
   };
 
   const startItem = ((currentPage - 1) * itemsPerPage[currentLayout]) + 1;
@@ -137,7 +150,7 @@ const GridLayout = () => {
           </div>
           {savedLayouts.length > 0 && (
             <div className="h-10 flex items-center">
-              <Select onValueChange={handleLoadLayout}>
+              <Select onValueChange={handleLayoutSelect}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Load Layout" />
                 </SelectTrigger>
@@ -148,15 +161,12 @@ const GridLayout = () => {
                       value={layout.name}
                       className="flex items-center justify-between group"
                     >
-                      <span>{layout.name}</span>
+                      <span className="flex-grow">{layout.name}</span>
                       <Button
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 -mr-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteLayout(layout.name);
-                        }}
+                        onClick={(e) => handleDeleteLayout(layout.name, e)}
                       >
                         <X className="h-4 w-4" />
                       </Button>
