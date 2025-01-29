@@ -19,6 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 interface GridCardProps {
   id: string;
   content: string;
+  index: number;  // Added this line to fix the TypeScript error
 }
 
 const GridCard = ({ id, content }: GridCardProps) => {
