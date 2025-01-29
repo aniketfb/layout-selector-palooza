@@ -150,15 +150,16 @@ const GridLayout = () => {
                       value={layout.name}
                       className="flex items-center justify-between group relative pr-8"
                     >
-                      <span className="flex-grow">{layout.name}</span>
-                      <div
+                      <span>{layout.name}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 absolute right-1"
                         onClick={(e) => handleDeleteLayout(e, layout.name)}
-                        className="absolute right-1 p-1 rounded-sm hover:bg-accent cursor-pointer"
-                        onPointerDown={(e) => e.stopPropagation()}
-                        onMouseDown={(e) => e.stopPropagation()}
                       >
                         <X className="h-4 w-4" />
-                      </div>
+                      </Button>
                     </SelectItem>
                   ))}
                 </SelectContent>
