@@ -6,22 +6,22 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
+  DialogDescription,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import AgoraRTC, { IAgoraRTC } from "agora-rtc-sdk-ng";
+import AgoraRTC from "agora-rtc-sdk-ng";
+import { useAgoraRTC } from "agora-rtc-react";
 import { Settings2 } from "lucide-react";
 
 type Props = {
   index: number;
-  id?: string;
-  content?: string;
 };
 
-const GridCard = ({ index, id, content }: Props) => {
+const GridCard = ({ index }: Props) => {
   const [channelName, setChannelName] = useState("");
   const [token, setToken] = useState("");
   const [appId, setAppId] = useState("");
@@ -29,7 +29,7 @@ const GridCard = ({ index, id, content }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+  const client = useAgoraRTC();
 
   useEffect(() => {
     return () => {
