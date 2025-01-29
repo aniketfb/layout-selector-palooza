@@ -24,12 +24,25 @@ const SettingsDialog = ({ isOpen, onClose }: SettingsDialogProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically handle the form submission
-    toast({
-      title: "Settings Updated",
-      description: "Your video feed settings have been updated successfully.",
-    });
-    onClose();
+    
+    // Basic URL validation
+    try {
+      if (url) {
+        new URL(url); // This will throw if URL is invalid
+      }
+      
+      toast({
+        title: "Settings Updated",
+        description: "Your video feed settings have been updated successfully.",
+      });
+      onClose();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Invalid URL",
+        description: "Please enter a valid URL (e.g., https://example.com)",
+      });
+    }
   };
 
   return (
@@ -46,7 +59,7 @@ const SettingsDialog = ({ isOpen, onClose }: SettingsDialogProps) => {
             <div className="grid gap-2">
               <Input
                 id="url"
-                placeholder="Stream URL"
+                placeholder="Stream URL (e.g., https://example.com)"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
               />
