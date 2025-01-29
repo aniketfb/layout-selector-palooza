@@ -17,7 +17,7 @@ const GridCard = ({ id, content }: GridCardProps) => {
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: transition || 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
   };
 
   return (
@@ -26,7 +26,7 @@ const GridCard = ({ id, content }: GridCardProps) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-card rounded-lg border border-border p-4 h-full min-h-[200px] transition-all duration-300 hover:border-primary/50 flex items-center justify-center cursor-move"
+      className="bg-card rounded-lg border border-border p-4 h-full min-h-[200px] transition-all duration-500 ease-in-out hover:border-primary/50 flex items-center justify-center cursor-move"
     >
       <div className="text-card-foreground/50">
         {content}
