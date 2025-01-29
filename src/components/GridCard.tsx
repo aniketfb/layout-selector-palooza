@@ -1,14 +1,16 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Video, Settings, Maximize2, Minimize2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import StatusIndicator from "./grid/StatusIndicator";
+import FullscreenControls from "./grid/FullscreenControls";
+import VideoFeedPlaceholder from "./grid/VideoFeedPlaceholder";
 
 interface GridCardProps {
   id: string;
   content: string;
 }
 
-const GridCard = ({ id, content }: GridCardProps) => {
+const GridCard = ({ id }: GridCardProps) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   
@@ -90,34 +92,12 @@ const GridCard = ({ id, content }: GridCardProps) => {
         ref={cardRef}
         className="w-full h-full relative"
       >
-        <div className="absolute top-4 left-4 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-green-500" />
-          <span className="text-sm text-foreground/80">Operational</span>
-        </div>
-        
-        <div className="absolute top-4 right-4 flex items-center gap-2">
-          {isFullscreen ? (
-            <Minimize2 
-              className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
-              onClick={toggleFullscreen}
-            />
-          ) : (
-            <Maximize2 
-              className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
-              onClick={toggleFullscreen}
-            />
-          )}
-          <Settings className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
-        </div>
-
-        <div className="flex-1 flex flex-col items-center justify-center gap-4 h-full">
-          <Video className="w-12 h-12 text-foreground/30" />
-          <div className="text-center">
-            <h3 className="text-lg font-medium text-foreground mb-2">No video feed available</h3>
-            <p className="text-sm text-foreground/50">Click settings to configure video feed</p>
-          </div>
-        </div>
-
+        <StatusIndicator />
+        <FullscreenControls 
+          isFullscreen={isFullscreen}
+          onToggleFullscreen={toggleFullscreen}
+        />
+        <VideoFeedPlaceholder />
         <div className="absolute bottom-4 right-4">
           <span className="text-sm text-foreground/50">0 ft (RLT)</span>
         </div>
