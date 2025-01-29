@@ -42,6 +42,13 @@ const GridLayout = () => {
   return (
     <div className="flex flex-col items-center min-h-screen py-8">
       <div className="w-full max-w-7xl mx-auto px-4 flex justify-between items-center mb-8">
+        <LayoutSelector
+          currentLayout={currentLayout}
+          onLayoutChange={(layout) => {
+            setCurrentLayout(layout);
+            setCurrentPage(1); // Reset to first page when layout changes
+          }}
+        />
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -72,13 +79,6 @@ const GridLayout = () => {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-        <LayoutSelector
-          currentLayout={currentLayout}
-          onLayoutChange={(layout) => {
-            setCurrentLayout(layout);
-            setCurrentPage(1); // Reset to first page when layout changes
-          }}
-        />
       </div>
       <div className={`grid-layout layout-${currentLayout}`}>{getGridItems()}</div>
     </div>
