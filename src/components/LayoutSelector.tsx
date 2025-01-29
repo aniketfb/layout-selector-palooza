@@ -1,5 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type LayoutOption = "1-2" | "2-2" | "3-4";
 
@@ -16,20 +21,19 @@ const LayoutSelector = ({ currentLayout, onLayoutChange }: LayoutSelectorProps) 
   ];
 
   return (
-    <div className="flex gap-2 mb-6">
-      {layouts.map(({ value, label }) => (
-        <Button
-          key={value}
-          onClick={() => onLayoutChange(value)}
-          variant={currentLayout === value ? "default" : "outline"}
-          className={cn(
-            "min-w-[80px]",
-            currentLayout === value && "bg-primary text-primary-foreground"
-          )}
-        >
-          {label}
-        </Button>
-      ))}
+    <div className="mb-6">
+      <Select value={currentLayout} onValueChange={onLayoutChange}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Select layout" />
+        </SelectTrigger>
+        <SelectContent>
+          {layouts.map(({ value, label }) => (
+            <SelectItem key={value} value={value}>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };
