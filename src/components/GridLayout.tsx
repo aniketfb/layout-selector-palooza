@@ -8,7 +8,6 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-  PaginationEllipsis,
 } from "@/components/ui/pagination";
 
 type LayoutOption = "1-2" | "2-2" | "3-4";
@@ -23,12 +22,12 @@ const GridLayout = () => {
     "3-4": 12,
   };
 
-  const totalItems = 24;
+  const totalItems = 19;
   const totalPages = Math.ceil(totalItems / itemsPerPage[currentLayout]);
 
   const getGridItems = () => {
     const startIndex = (currentPage - 1) * itemsPerPage[currentLayout];
-    const endIndex = startIndex + itemsPerPage[currentLayout];
+    const endIndex = Math.min(startIndex + itemsPerPage[currentLayout], totalItems);
     
     return Array.from(
       { length: itemsPerPage[currentLayout] },
@@ -40,34 +39,8 @@ const GridLayout = () => {
     setCurrentPage(page);
   };
 
-  const getVisiblePages = () => {
-    const pages = [];
-    
-    // Always show first page
-    pages.push(1);
-    
-    if (currentPage > 3) {
-      pages.push('ellipsis');
-    }
-    
-    // Show current page and adjacent pages
-    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-      if (!pages.includes(i)) {
-        pages.push(i);
-      }
-    }
-    
-    if (currentPage < totalPages - 2) {
-      pages.push('ellipsis');
-    }
-    
-    // Always show last page
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
-    
-    return pages;
-  };
+  const startItem = ((currentPage - 1) * itemsPerPage[currentLayout]) + 1;
+  const endItem = Math.min(currentPage * itemsPerPage[currentLayout], totalItems);
 
   return (
     <div className="flex flex-col items-center min-h-screen py-8">
@@ -79,40 +52,19 @@ const GridLayout = () => {
             setCurrentPage(1);
           }}
         />
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
-            {getVisiblePages().map((page, index) => (
-              <PaginationItem key={index}>
-                {page === 'ellipsis' ? (
-                  <PaginationEllipsis />
-                ) : (
-                  <PaginationLink
-                    onClick={() => handlePageChange(page as number)}
-                    isActive={currentPage === page}
-                  >
-                    {page}
-                  </PaginationLink>
-                )}
-              </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationNext
-                onClick={() =>
-                  currentPage < totalPages && handlePageChange(currentPage + 1)
-                }
-                className={
-                  currentPage >= totalPages ? "pointer-events-none opacity-50" : ""
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Feeds {startItem} – {endItem} of {totalItems}
+          </span>
+          <PaginationPrevious
+            onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+            className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
+          />
+          <PaginationNext
+            onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+            className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
+          />
+        </div>
       </div>
       <div className={`grid-layout layout-${currentLayout}`}>{getGridItems()}</div>
     </div>
