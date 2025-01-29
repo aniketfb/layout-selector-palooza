@@ -11,11 +11,13 @@ const FullscreenControls = ({ isFullscreen, onToggleFullscreen }: FullscreenCont
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleSettingsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     setIsSettingsOpen(true);
   };
 
   const handleFullscreenClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     onToggleFullscreen();
   };
@@ -23,24 +25,36 @@ const FullscreenControls = ({ isFullscreen, onToggleFullscreen }: FullscreenCont
   return (
     <>
       <div 
-        className="absolute top-4 right-4 flex items-center gap-2"
+        className="absolute top-4 right-4 flex items-center gap-2 z-10"
         onClick={(e) => e.stopPropagation()}
       >
         {isFullscreen ? (
-          <Minimize2 
-            className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
+          <button
             onClick={handleFullscreenClick}
-          />
+            className="cursor-pointer"
+          >
+            <Minimize2 
+              className="w-5 h-5 text-foreground/50 hover:text-foreground/80" 
+            />
+          </button>
         ) : (
-          <Maximize2 
-            className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
+          <button
             onClick={handleFullscreenClick}
-          />
+            className="cursor-pointer"
+          >
+            <Maximize2 
+              className="w-5 h-5 text-foreground/50 hover:text-foreground/80" 
+            />
+          </button>
         )}
-        <Settings 
-          className="w-5 h-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" 
+        <button
           onClick={handleSettingsClick}
-        />
+          className="cursor-pointer"
+        >
+          <Settings 
+            className="w-5 h-5 text-foreground/50 hover:text-foreground/80" 
+          />
+        </button>
       </div>
       <SettingsDialog 
         isOpen={isSettingsOpen}
