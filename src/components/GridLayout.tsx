@@ -155,8 +155,10 @@ const GridLayout = () => {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 absolute right-1"
+                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 absolute right-1 pointer-events-auto"
                         onClick={(e) => handleDeleteLayout(e, layout.name)}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
                       >
                         <X className="h-4 w-4" />
                       </Button>
